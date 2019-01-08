@@ -1,16 +1,17 @@
-src/node_modules/
-src/bower_components/
-
 data/config.php
 
 uploads/big/*
 uploads/import/*
 uploads/medium/*
+uploads/small/*
 uploads/thumb/*
+
+dist/user.css
 
 !uploads/big/index.html
 !uploads/import/index.html
 !uploads/medium/index.html
+!uploads/small/index.html
 !uploads/thumb/index.html
 
 plugins/*
@@ -18,5 +19,8 @@ plugins/*
 !plugins/Diagnostics/
 !plugins/Log/
 
-php/vendor/*
 vendor/*
+
+npm-debug.log
+
+Lychee-v*

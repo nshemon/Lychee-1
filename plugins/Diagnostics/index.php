@@ -34,7 +34,7 @@ echo('Diagnostics' . PHP_EOL);
 echo('-----------' . PHP_EOL);
 
 // PHP Version
-if (floatval(phpversion())<5.5)    $error .= ('Error: Upgrade to PHP 5.5 or higher' . PHP_EOL);
+if (floatval(phpversion())<7.1)    $error .= ('Error: Upgrade to PHP 7.1 or higher' . PHP_EOL);
 
 // Extensions
 if (!extension_loaded('session'))  $error .= ('Error: PHP session extension not activated' . PHP_EOL);
@@ -47,6 +47,7 @@ if (!extension_loaded('zip'))      $error .= ('Error: PHP zip extension not acti
 
 // Permissions
 if (hasPermissions(LYCHEE_UPLOADS_BIG)===false)    $error .= ('Error: \'uploads/big\' is missing or has insufficient read/write privileges' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS_SMALL)===false)  $error .= ('Error: \'uploads/small\' is missing or has insufficient read/write privileges' . PHP_EOL);
 if (hasPermissions(LYCHEE_UPLOADS_MEDIUM)===false) $error .= ('Error: \'uploads/medium\' is missing or has insufficient read/write privileges' . PHP_EOL);
 if (hasPermissions(LYCHEE_UPLOADS_THUMB)===false)  $error .= ('Error: \'uploads/thumb\' is missing or has insufficient read/write privileges' . PHP_EOL);
 if (hasPermissions(LYCHEE_UPLOADS_IMPORT)===false) $error .= ('Error: \'uploads/import\' is missing or has insufficient read/write privileges' . PHP_EOL);

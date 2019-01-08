@@ -22,6 +22,7 @@ final class Settings {
 		// Add each to return
 		while ($setting = $settings->fetch_object()) $return[$setting->key] = $setting->value;
 
+		$return['imagick'] = (extension_loaded('imagick') && $return['imagick'] == '1') ? '1' : '0';
 		// Convert plugins to array
 		$return['plugins'] = explode(';', $return['plugins']);
 
@@ -32,6 +33,44 @@ final class Settings {
 		return $return;
 
 	}
+
+	/**
+	 * @return array Returns the settings of Lychee.
+	 */
+	public static function getAll() {
+
+		// Execute query
+		$query    = Database::prepare(Database::get(), "SELECT * FROM ?", array(LYCHEE_TABLE_SETTINGS));
+		$settings = Database::execute(Database::get(), $query, __METHOD__, __LINE__);
+
+		// Add each to return
+		$return = array();
+		// while ($setting = $settings->fetch_object()) $return[$setting->key] = $setting->value;
+		while($setting = $settings->fetch_array())
+		{
+		$return[] = $setting;
+		}
+
+		return $return;
+
+	}
+
+
+	public static function saveAll() {
+
+		$no_error = true;
+		foreach ($_POST as $key => $value) {
+			if($key != 'function')
+			{
+				$no_error &= self::set($key,$value);
+			}
+		}
+
+		return $no_error;
+
+	}
+
+
 
 	/**
 	 * @return boolean Returns true when successful.
@@ -59,6 +98,14 @@ final class Settings {
 		return true;
 
 	}
+
+
+	public function setCSS($css)
+	{
+		file_put_contents(__DIR__ . '/../../dist/user.css',$css);
+		return true;
+	}
+
 
 	/**
 	 * Sets the username and password when current password is correct.
@@ -149,6 +196,17 @@ final class Settings {
 		Log::error(Database::get(), __METHOD__, __LINE__, 'Could not update settings. Unknown lang.');
 		return false;
 	}
+
+	public static function setLayout($layout) {
+		if (self::set('justified_layout', ($layout == '1') ? '1' : '0', true)===false) return false;
+		return true;
+	}
+
+	public static function setImageOverlay($imageOverlay) {
+		if (self::set('image_overlay', ($imageOverlay == '1') ? '1' : '0', true)===false) return false;
+		return true;
+	}
+
 
 	/**
 	 * Sets a new sorting for the photos.
@@ -244,6 +302,31 @@ final class Settings {
 	 */
 	public static function hasImagick() {
 		return (bool)(extension_loaded('imagick') && self::get()['imagick'] === '1');
+	}
+
+	/**
+	 * @return boolean Boolean for successful default setting
+	 */
+	public static function setDefaultLicense($license) {
+		$licenses = ['none', 'reserved', 'CC0', 'CC-BY', 'CC-BY-ND', 'CC-BY-SA', 'CC-BY-NC', 'CC-BY-NC-ND', 'CC-BY-NC-SA' ];
+
+		$found = false;
+		$i = 0;
+
+		while(!$found && $i < count($licenses)) {
+			if ($licenses[$i] === $license) $found = true;
+			$i++;
+		}
+
+		if(!$found) {
+			Log::error(Database::get(), __METHOD__, __LINE__, 'Cound not find the submitted license');
+		}
+		else {
+			if (self::set('default_license', $license, true)===false) return false;
+			return true;
+		}
+		Log::error(Database::get(), __METHOD__, __LINE__, 'Could not update settings. Unknown license.');
+		return false;
 	}
 
 }

@@ -16,12 +16,15 @@ use Lychee\Access\Installation;
 use Lychee\Access\Admin;
 use Lychee\Access\Guest;
 
+// error_reporting(E_ALL);
+// ini_set('display_errors', 'On');
+
 require(__DIR__ . '/define.php');
 require(__DIR__ . '/autoload.php');
 if (file_exists(__DIR__ . '/../vendor/autoload.php' ))
 {
     include(__DIR__ . '/../vendor/autoload.php');
-    define('VIDEO_THUMB');
+    define('VIDEO_THUMB', True);
 }
 
 require(__DIR__ . '/helpers/fastImageCopyResampled.php');
@@ -32,6 +35,7 @@ require(__DIR__ . '/helpers/getGraphHeader.php');
 require(__DIR__ . '/helpers/getHashedString.php');
 require(__DIR__ . '/helpers/hasPermissions.php');
 require(__DIR__ . '/helpers/search.php');
+require(__DIR__ . '/helpers/gcd.php');
 
 // Define the called function
 if (isset($_POST['function']))     $fn = $_POST['function'];
