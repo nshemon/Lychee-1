@@ -98,6 +98,13 @@ final class Import {
 	 */
 	public function server($path, $albumID = 0) {
 
+		// Fixes #177
+		$php_script_limit = Settings::get()['php_script_limit'];
+		if ($php_script_limit == 1) {
+			set_time_limit(0);
+			Log::notice(Database::get(), __METHOD__, __LINE__, 'Importing using unlimited execution time');
+		}
+
 		// Parse path
 		if (!isset($path))           $path = LYCHEE_UPLOADS_IMPORT;
 		if (substr($path, -1)==='/') $path = substr($path, 0, -1);
@@ -154,7 +161,7 @@ final class Import {
 				// Folder
 
 				$album              = new Album(null);
-				$newAlbumID         = $album->add('[Import] ' . basename($file));
+				$newAlbumID         = $album->add(basename($file), true);
 				$contains['albums'] = true;
 
 				if ($newAlbumID===false) {
